@@ -5,7 +5,7 @@
 
 Identify all group elements (numbers and names).
 
-- up202305965 Hugo Azevedo
+- up202305965 Hugo Ramalhão Azevedo
 - up202306311 Amanda Brito Japiassu
 - upXXXXX Name of element 3
 
