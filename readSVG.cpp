@@ -44,6 +44,11 @@ namespace svg
                 Point radius = Point{child->IntAttribute("rx"), child->IntAttribute("ry")};
                 element = new Circle(fill, center, radius);
             }
+
+            if (element != nullptr)
+            {
+                svg_elements.push_back(element);
+            }
         }
     }
 }
