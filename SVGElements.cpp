@@ -20,4 +20,14 @@ namespace svg
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
 
+    Circle::Circle(const Color &fill,
+                   const Point &center, 
+                   const Point &radius)
+        : Ellipse(fill, center, radius)
+    {
+    }
+    void Circle::draw(PNGImage& img) const 
+    {
+        img.draw_ellipse(center, radius, fill);
+    }
 }
