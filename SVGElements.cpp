@@ -21,9 +21,9 @@ namespace svg
     {
         center = center.translate(t);
     }
-    void svg::Ellipse::rotate(int v)
+    void svg::Ellipse::rotate(const Point &origin, int degrees)
     {
-        // Implement rotation logic here
+        center = center.rotate(origin, degrees);
     }
     void svg::Ellipse::scale(int v)
     {
@@ -47,9 +47,9 @@ namespace svg
     {
         center = center.translate(t);
     }
-    void svg::Circle::rotate(int v)
+    void svg::Circle::rotate(const Point &origin, int degrees)
     {
-        // Implement rotation logic here
+        center = center.rotate(origin, degrees);
     }
     void svg::Circle::scale(int v)
     {
@@ -73,9 +73,12 @@ namespace svg
             point = point.translate(t);
         }
     }
-    void svg::Polygon::rotate(int v)
+    void svg::Polygon::rotate(const Point &origin, int degrees)
     {
-        // Implement rotation logic here
+        for (auto &point : points)
+        {
+            point = point.rotate(origin, degrees);
+        }
     }
     void svg::Polygon::scale(int v)
     {
@@ -100,9 +103,12 @@ namespace svg
             point = point.translate(t);
         }
     }
-    void svg::Rect::rotate(int v)
+    void svg::Rect::rotate(const Point &origin, int degrees)
     {
-        // Implement rotation logic here
+        for (auto &point : points)
+        {
+            point = point.rotate(origin, degrees);
+        }
     }
     void svg::Rect::scale(int v)
     {
@@ -129,9 +135,12 @@ namespace svg
             point = point.translate(t);
         }
     }
-    void svg::Polyline::rotate(int v)
+    void svg::Polyline::rotate(const Point &origin, int degrees)
     {
-        // Implement rotation logic here
+        for (auto &point : points)
+        {
+            point = point.rotate(origin, degrees);
+        }
     }
     void svg::Polyline::scale(int v)
     {
@@ -154,9 +163,10 @@ namespace svg
         start = start.translate(t);
         end = end.translate(t);
     }
-    void svg::Line::rotate(int v)
+    void svg::Line::rotate(const Point &origin, int degrees)
     {
-        // Implement rotation logic here
+        start = start.rotate(origin, degrees);
+        end = end.rotate(origin, degrees);
     }
     void svg::Line::scale(int v)
     {

@@ -16,7 +16,7 @@ namespace svg
         virtual ~SVGElement();
         virtual void draw(PNGImage &img) const = 0;
         virtual void translate(Point &t) = 0;
-        virtual void rotate(int v) = 0;
+        virtual void rotate(const Point &origin, int degrees) = 0;
         virtual void scale(int v) = 0;
     };
 
@@ -36,7 +36,7 @@ namespace svg
         Ellipse(const Color &fill, const Point &center, const Point &radius);
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
-        void rotate(int v) override;
+        void rotate(const Point &origin, int degrees) override;
         void scale(int v) override;
     protected:
         Color fill;
@@ -50,7 +50,7 @@ namespace svg
         Circle(const Color &fill, const Point &center, const int &radius);
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
-        void rotate(int v) override;
+        void rotate(const Point &origin, int degrees) override;
         void scale(int v) override;
     private:
         int radius;
@@ -62,7 +62,7 @@ namespace svg
         Polygon(const Color &fill, const std::vector<Point> &points);
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
-        void rotate(int v) override;
+        void rotate(const Point &origin, int degrees) override;
         void scale(int v) override;
     protected:
         Color fill;
@@ -75,7 +75,7 @@ namespace svg
         Rect(const Color &fill, const Point &top_left, const Point &bottom_right);
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
-        void rotate(int v) override;
+        void rotate(const Point &origin, int degrees) override;
         void scale(int v) override;
     private:
         Point top_left;
@@ -88,7 +88,7 @@ namespace svg
         Polyline(const Color &stroke, const std::vector<Point> &points);
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
-        void rotate(int v) override;
+        void rotate(const Point &origin, int degrees) override;
         void scale(int v) override;
     protected:
         Color stroke;
@@ -101,7 +101,7 @@ namespace svg
         Line(const Color &stroke, const Point &start, const Point &end);
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
-        void rotate(int v) override;
+        void rotate(const Point &origin, int degrees) override;
         void scale(int v) override;
     private:
         Point start;
