@@ -17,6 +17,18 @@ namespace svg
     {
         img.draw_ellipse(center, radius, fill);
     }
+    void svg::Ellipse::translate(Point &t)
+    {
+        center = center.translate(t);
+    }
+    void svg::Ellipse::rotate(int v)
+    {
+        // Implement rotation logic here
+    }
+    void svg::Ellipse::scale(int v)
+    {
+        // Implement scaling logic here
+    }
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
 
@@ -31,6 +43,18 @@ namespace svg
     {
         img.draw_ellipse(center, Point{radius, radius}, fill);
     }
+    void svg::Circle::translate(Point &t)
+    {
+        center = center.translate(t);
+    }
+    void svg::Circle::rotate(int v)
+    {
+        // Implement rotation logic here
+    }
+    void svg::Circle::scale(int v)
+    {
+        // Implement scaling logic here
+    }
 
     // Polygon (initial code provided)
     Polygon::Polygon(const Color &fill,
@@ -41,6 +65,21 @@ namespace svg
     void Polygon::draw(PNGImage &img) const
     {
         img.draw_polygon(points, fill);
+    }
+    void svg::Polygon::translate(Point &t)
+    {
+        for (auto &point : points)
+        {
+            point = point.translate(t);
+        }
+    }
+    void svg::Polygon::rotate(int v)
+    {
+        // Implement rotation logic here
+    }
+    void svg::Polygon::scale(int v)
+    {
+        // Implement scaling logic here
     }
 
     // Rect (initial code provided)
@@ -53,6 +92,21 @@ namespace svg
     void Rect::draw(PNGImage &img) const
     {
         img.draw_polygon(points, fill);
+    }
+    void svg::Rect::translate(Point &t)
+    {
+        for (auto &point : points)
+        {
+            point = point.translate(t);
+        }
+    }
+    void svg::Rect::rotate(int v)
+    {
+        // Implement rotation logic here
+    }
+    void svg::Rect::scale(int v)
+    {
+        // Implement scaling logic here
     }
 
     // Polyline (initial code provided)
@@ -68,6 +122,21 @@ namespace svg
             img.draw_line(points[i], points[i + 1], stroke);
         }
     }
+    void svg::Polyline::translate(Point &t)
+    {
+        for (auto &point : points)
+        {
+            point = point.translate(t);
+        }
+    }
+    void svg::Polyline::rotate(int v)
+    {
+        // Implement rotation logic here
+    }
+    void svg::Polyline::scale(int v)
+    {
+        // Implement scaling logic here
+    }
 
     // Line (initial code provided)
     Line::Line(const Color &stroke,
@@ -79,5 +148,18 @@ namespace svg
     void Line::draw(PNGImage &img) const
     {
         img.draw_line(start, end, stroke);
+    }
+    void svg::Line::translate(Point &t)
+    {
+        start = start.translate(t);
+        end = end.translate(t);
+    }
+    void svg::Line::rotate(int v)
+    {
+        // Implement rotation logic here
+    }
+    void svg::Line::scale(int v)
+    {
+        // Implement scaling logic here
     }
 }

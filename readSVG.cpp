@@ -2,12 +2,32 @@
 #include <iostream>
 #include "SVGElements.hpp"
 #include "external/tinyxml2/tinyxml2.h"
+#include <algorithm>
 
 using namespace std;
 using namespace tinyxml2;
 
 namespace svg
 {
+    void applyTransform(SVGElement* element, const char* transform_attr) 
+    
+    {
+        if (transform_attr) 
+        {
+            string transform_str = transform_attr;
+            replace(transform_str.begin(), transform_str.end(), ',', ' ');
+            cout << transform_str << endl;
+
+            int x_translate, y_translate;
+            if (sscanf(transform_str.c_str(), "translate(%d %d)", &x_translate, &y_translate) == 2) 
+            {
+                // Successfully parsed the translation values
+                Point t = Point{x_translate, y_translate};
+                element->translate(t);
+            }
+        }
+    }
+
     void readSVG(const string& svg_file, Point& dimensions, vector<SVGElement *>& svg_elements)
     {
         XMLDocument doc;
@@ -38,6 +58,8 @@ namespace svg
 
                 // Create Ellipse object and add to SVG elements vector
                 Ellipse* ellipse = new Ellipse(fill, center, radius);
+
+                applyTransform(ellipse, child->Attribute("transform"));
                 svg_elements.push_back(ellipse);
             
             }
@@ -51,6 +73,8 @@ namespace svg
 
                 // Create Circle object and add to SVG elements vector
                 Circle* circle = new Circle(fill, center, radius);
+
+                applyTransform(circle, child->Attribute("transform"));
                 svg_elements.push_back(circle);
             }
             else if (strcmp(element_name, "polygon") == 0) 
@@ -78,6 +102,8 @@ namespace svg
 
                 // Create Polygon object and add to SVG elements vector
                 Polygon* polygon = new Polygon(fill, points);
+
+                applyTransform(polygon, child->Attribute("transform"));
                 svg_elements.push_back(polygon);
             }
             else if (strcmp(element_name, "rect") == 0)
@@ -87,9 +113,10 @@ namespace svg
                 // Create Point objects for top left and bottom right corners
                 Point top_left = Point{child->IntAttribute("x"), child->IntAttribute("y")};
                 Point bottom_right = Point{child->IntAttribute("x") + child->IntAttribute("width") - 1, child->IntAttribute("y") + child->IntAttribute("height") - 1};
-                cout << "Top left: " << top_left.x << ", " << top_left.y << ", " << child->IntAttribute("width") << ", " << dimensions.x << endl;
                 // Create Rect object and add to SVG elements vector
                 Rect* rect = new Rect(fill, top_left, bottom_right);
+
+                applyTransform(rect, child->Attribute("transform"));
                 svg_elements.push_back(rect);
             }
             else if (strcmp(element_name, "polyline") == 0)
@@ -117,18 +144,24 @@ namespace svg
 
                 // Create Polyline object and add to SVG elements vector
                 Polyline* polyline = new Polyline(stroke, points);
+
+                applyTransform(polyline, child->Attribute("transform"));
                 svg_elements.push_back(polyline);
             }
             else if (strcmp(element_name, "line") == 0)
             {
                 // Create Color object from stroke color string
                 Color stroke(parse_color(child->Attribute("stroke")));
+
                 // Create Point objects for start and end points
                 Point start = Point{child->IntAttribute("x1"), child->IntAttribute("y1")};
                 Point end = Point{child->IntAttribute("x2"), child->IntAttribute("y2")};
 
-                // Create Line object and add to SVG elements vector
+                // Create Line object
                 Line* line = new Line(stroke, start, end);
+
+                applyTransform(line, child->Attribute("transform"));
+                // Add to SVG elements vector
                 svg_elements.push_back(line);
             }
             else if (element != nullptr)
