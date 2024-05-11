@@ -44,6 +44,26 @@ namespace svg
                 }
                 element->rotate(origin, angle);
             }
+            else if (sscanf(transform_str.c_str(), "scale(%d)", &x_translate) == 1)
+            {
+                // Successfully parsed the scale factor
+                Point origin;
+                if (transform_origin_attr)
+                {
+                    int x_origin, y_origin;
+                    if (sscanf(transform_origin_attr, "%d %d", &x_origin, &y_origin) == 2)
+                    {
+                        // Successfully parsed the transform-origin values
+                        origin = Point{x_origin, y_origin};
+                    }
+                }
+                else
+                {
+                    // No transform-origin attribute, use (0,0) as the default scale origin
+                    origin = Point{0, 0};
+                }
+                element->scale(origin, x_translate);
+            }
         }
     }
 
