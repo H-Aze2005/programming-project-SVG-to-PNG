@@ -257,4 +257,38 @@ namespace svg
         end.x = origin.x + dist.x;
         end.y = origin.y + dist.y;
     }
+
+    // Group (initial code provided)
+    Group::Group(const std::vector<SVGElement *> &elements)
+        : elements(elements)
+    {
+    }
+    void Group::draw(PNGImage &img) const
+    {
+        for (const auto &element : elements)
+        {
+            element->draw(img);
+        }
+    }
+    void svg::Group::translate(Point &t)
+    {
+        for (auto &element : elements)
+        {
+            element->translate(t);
+        }
+    }
+    void svg::Group::rotate(const Point &origin, int degrees)
+    {
+        for (auto &element : elements)
+        {
+            element->rotate(origin, degrees);
+        }
+    }
+    void svg::Group::scale(const Point &origin, int v)
+    {
+        for (auto &element : elements)
+        {
+            element->scale(origin, v);
+        }
+    }
 }
