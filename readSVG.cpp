@@ -2,6 +2,7 @@
 #include "SVGElements.hpp"
 #include "external/tinyxml2/tinyxml2.h"
 #include <algorithm>
+#include <map>
 
 using namespace std;
 using namespace tinyxml2;
@@ -65,7 +66,7 @@ namespace svg
         }
     }
 
-    void readGroup(XMLElement* group_elem, vector<SVGElement *>& group_elements)
+    void readGroup(XMLElement* group_elem, vector<SVGElement *>& group_elements, std::map<std::string, SVGElement*>& id_map)
     {
     for (XMLElement* child = group_elem->FirstChildElement(); child != NULL; child = child->NextSiblingElement()) {
         // Process child elements here, similar to in readSVG
@@ -74,10 +75,14 @@ namespace svg
         if (strcmp(element_name, "g") == 0)
         {
             vector<SVGElement *> nested_group_elements;
-            readGroup(child, nested_group_elements);
+            readGroup(child, nested_group_elements, id_map);
             Group* nested_group = new Group(nested_group_elements);
             applyTransform(nested_group, child->Attribute("transform"), child->Attribute("transform-origin"));
             group_elements.push_back(nested_group);
+            if (child->Attribute("id"))
+            {
+                id_map[child->Attribute("id")] = nested_group;
+            }
         }
         // Process other elements as before
             if (strcmp(element_name, "ellipse") == 0)
@@ -93,7 +98,10 @@ namespace svg
 
                 applyTransform(ellipse, child->Attribute("transform"), child->Attribute("transform-origin"));
                 group_elements.push_back(ellipse);
-            
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = ellipse;
+                }
             }
             else if (strcmp(element_name, "circle") == 0)
             {
@@ -108,6 +116,10 @@ namespace svg
 
                 applyTransform(circle, child->Attribute("transform"), child->Attribute("transform-origin"));
                 group_elements.push_back(circle);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = circle;
+                }
             }
             else if (strcmp(element_name, "polygon") == 0) 
             {
@@ -137,6 +149,10 @@ namespace svg
 
                 applyTransform(polygon, child->Attribute("transform"), child->Attribute("transform-origin"));
                 group_elements.push_back(polygon);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = polygon;
+                }
             }
             else if (strcmp(element_name, "rect") == 0)
             {
@@ -150,6 +166,10 @@ namespace svg
 
                 applyTransform(rect, child->Attribute("transform"), child->Attribute("transform-origin"));
                 group_elements.push_back(rect);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = rect;
+                }
             }
             else if (strcmp(element_name, "polyline") == 0)
             {
@@ -179,6 +199,10 @@ namespace svg
 
                 applyTransform(polyline, child->Attribute("transform"), child->Attribute("transform-origin"));
                 group_elements.push_back(polyline);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = polyline;
+                }
             }
             else if (strcmp(element_name, "line") == 0)
             {
@@ -195,6 +219,35 @@ namespace svg
                 applyTransform(line, child->Attribute("transform"), child->Attribute("transform-origin"));
                 // Add to SVG elements vector
                 group_elements.push_back(line);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = line;
+                }
+            }
+            else if (strcmp(element_name, "use") == 0)
+            {
+            // Get href attribute
+            const char* href = child->Attribute("href");
+            // Remove '#' prefix from href
+            std::string id = href + 1;
+            // Find original element in map
+            SVGElement* original = id_map[id];
+            // Clone original element
+            if (original != nullptr) {
+                // Clone original element
+                SVGElement* clone = original->clone();
+                // Apply transformations to clone
+                applyTransform(clone, child->Attribute("transform"), child->Attribute("transform-origin"));
+                // Add clone to SVG elements vector
+                group_elements.push_back(clone);
+                // If the use element has an id, add the clone to the id_map
+                if (child->Attribute("id")) {
+                    id_map[child->Attribute("id")] = clone;
+                }
+                } else {
+                    // Handle the error: the original element was not found in the map
+                    std::cerr << "Error: original element with id " << id << " not found." << std::endl;
+                }
             }
     }
 }
@@ -211,6 +264,8 @@ namespace svg
 
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
+
+        std::map<std::string, SVGElement*> id_map;
         
         // TODO complete code -->
         
@@ -232,6 +287,10 @@ namespace svg
 
                 applyTransform(ellipse, child->Attribute("transform"), child->Attribute("transform-origin"));
                 svg_elements.push_back(ellipse);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = ellipse;
+                }
             
             }
             else if (strcmp(element_name, "circle") == 0)
@@ -247,6 +306,10 @@ namespace svg
 
                 applyTransform(circle, child->Attribute("transform"), child->Attribute("transform-origin"));
                 svg_elements.push_back(circle);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = circle;
+                }
             }
             else if (strcmp(element_name, "polygon") == 0) 
             {
@@ -276,6 +339,10 @@ namespace svg
 
                 applyTransform(polygon, child->Attribute("transform"), child->Attribute("transform-origin"));
                 svg_elements.push_back(polygon);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = polygon;
+                }
             }
             else if (strcmp(element_name, "rect") == 0)
             {
@@ -289,6 +356,10 @@ namespace svg
 
                 applyTransform(rect, child->Attribute("transform"), child->Attribute("transform-origin"));
                 svg_elements.push_back(rect);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = rect;
+                }
             }
             else if (strcmp(element_name, "polyline") == 0)
             {
@@ -318,6 +389,10 @@ namespace svg
 
                 applyTransform(polyline, child->Attribute("transform"), child->Attribute("transform-origin"));
                 svg_elements.push_back(polyline);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = polyline;
+                }
             }
             else if (strcmp(element_name, "line") == 0)
             {
@@ -334,14 +409,47 @@ namespace svg
                 applyTransform(line, child->Attribute("transform"), child->Attribute("transform-origin"));
                 // Add to SVG elements vector
                 svg_elements.push_back(line);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = line;
+                }
             }
             else if (strcmp(element_name, "g") == 0)
             {
                 vector<SVGElement *> group_elements;
-                readGroup(child, group_elements);
+                readGroup(child, group_elements, id_map);
                 Group* group = new Group(group_elements);
                 applyTransform(group, child->Attribute("transform"), child->Attribute("transform-origin"));
                 svg_elements.push_back(group);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = group;
+                }
+            }
+            else if (strcmp(element_name, "use") == 0)
+            {
+            // Get href attribute
+            const char* href = child->Attribute("href");
+            // Remove '#' prefix from href
+            std::string id = href + 1;
+            // Find original element in map
+            SVGElement* original = id_map[id];
+            // Clone original element
+            if (original != nullptr) {
+                // Clone original element
+                SVGElement* clone = original->clone();
+                // Apply transformations to clone
+                applyTransform(clone, child->Attribute("transform"), child->Attribute("transform-origin"));
+                // Add clone to SVG elements vector
+                svg_elements.push_back(clone);
+                // If the use element has an id, add the clone to the id_map
+                if (child->Attribute("id")) {
+                    id_map[child->Attribute("id")] = clone;
+                }
+                } else {
+                    // Handle the error: the original element was not found in the map
+                    std::cerr << "Error: original element with id " << id << " not found." << std::endl;
+                }
             }
             else if (element != nullptr)
             {

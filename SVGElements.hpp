@@ -18,6 +18,7 @@ namespace svg
         virtual void translate(Point &t) = 0;
         virtual void rotate(const Point &origin, int degrees) = 0;
         virtual void scale(const Point &origin, int v) = 0;
+        virtual SVGElement *clone() const = 0;
     };
 
     // Declaration of namespace functions
@@ -39,6 +40,7 @@ namespace svg
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
         void scale(const Point &origin, int v) override;
+        Ellipse* clone() const override;
     protected:
         Color fill;
         Point center;
@@ -54,6 +56,7 @@ namespace svg
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
         void scale(const Point &origin, int v) override;
+        Circle* clone() const override;
     private:
         int radius;
     };
@@ -67,6 +70,7 @@ namespace svg
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
         void scale(const Point &origin, int v) override;
+        Polygon* clone() const override;
     protected:
         Color fill;
         std::vector<Point> points;
@@ -81,6 +85,7 @@ namespace svg
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
         void scale(const Point &origin, int v) override;
+        Rect* clone() const override;
     private:
         Point top_left;
         Point bottom_right;
@@ -95,6 +100,7 @@ namespace svg
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
         void scale(const Point &origin, int v) override;
+        Polyline* clone() const override;
     protected:
         Color stroke;
         std::vector<Point> points;
@@ -109,6 +115,7 @@ namespace svg
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
         void scale(const Point &origin, int v) override;
+        Line* clone() const override;
     private:
         Point start;
         Point end;
@@ -123,6 +130,7 @@ namespace svg
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
         void scale(const Point &origin, int v) override;
+        Group* clone() const override;
     private:
         std::vector<SVGElement *> elements;
     };

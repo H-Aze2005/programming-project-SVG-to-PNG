@@ -48,6 +48,10 @@ namespace svg
         radius.x = radius.x * v;
         radius.y = radius.y * v;
     }
+    Ellipse *Ellipse::clone() const
+    {
+        return new Ellipse(*this);
+    }
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
 
@@ -90,6 +94,10 @@ namespace svg
 
         // Scale the radius
         radius = radius * v;
+    }
+    Circle *Circle::clone() const
+    {
+        return new Circle(*this);
     }
 
     // Polygon (initial code provided)
@@ -137,6 +145,10 @@ namespace svg
             point.y = origin.y + dist.y;
         }
     }
+    Polygon *Polygon::clone() const
+    {
+        return new Polygon(*this);
+    }
 
     // Rect (initial code provided)
     Rect::Rect(const Color &fill,
@@ -183,6 +195,10 @@ namespace svg
             point.x = origin.x + dist.x;
             point.y = origin.y + dist.y;
         }
+    }
+    Rect *Rect::clone() const
+    {
+        return new Rect(*this);
     }
 
     // Polyline (initial code provided)
@@ -233,6 +249,10 @@ namespace svg
             point.y = origin.y + dist.y;
         }
     }
+    Polyline *Polyline::clone() const
+    {
+        return new Polyline(*this);
+    }
 
     // Line (initial code provided)
     Line::Line(const Color &stroke,
@@ -281,6 +301,10 @@ namespace svg
         end.x = origin.x + dist.x;
         end.y = origin.y + dist.y;
     }
+    Line *Line::clone() const
+    {
+        return new Line(*this);
+    }
 
     // Group (initial code provided)
     Group::Group(const std::vector<SVGElement *> &elements)
@@ -321,5 +345,14 @@ namespace svg
         {
             element->scale(origin, v);
         }
+    }
+    Group *Group::clone() const
+    {
+        std::vector<SVGElement *> cloned_elements;
+        for (const auto &element : elements)
+        {
+            cloned_elements.push_back(element->clone());
+        }
+        return new Group(cloned_elements);
     }
 }
