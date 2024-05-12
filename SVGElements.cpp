@@ -13,6 +13,10 @@ namespace svg
         : fill(fill), center(center), radius(radius)
     {
     }
+    Ellipse::~Ellipse() 
+    {
+
+    }
     void Ellipse::draw(PNGImage &img) const
     {
         img.draw_ellipse(center, radius, fill);
@@ -54,6 +58,10 @@ namespace svg
         : Ellipse(fill, center, Point{radius, radius}), radius(radius)
     {
     }
+    Circle::~Circle() 
+    {
+
+    }
     void Circle::draw(PNGImage &img) const
     {
         img.draw_ellipse(center, Point{radius, radius}, fill);
@@ -89,6 +97,10 @@ namespace svg
                      const std::vector<Point> &points)
         : fill(fill), points(points)
     {
+    }
+    Polygon::~Polygon() 
+    {
+
     }
     void Polygon::draw(PNGImage &img) const
     {
@@ -133,6 +145,10 @@ namespace svg
         : Polygon(fill, {top_left, Point{bottom_right.x, top_left.y}, bottom_right, Point{top_left.x, bottom_right.y}})
     {
     }
+    Rect::~Rect() 
+    {
+
+    }
     void Rect::draw(PNGImage &img) const
     {
         img.draw_polygon(points, fill);
@@ -174,6 +190,10 @@ namespace svg
                        const std::vector<Point> &points)
         : stroke(stroke), points(points)
     {
+    }
+    Polyline::~Polyline() 
+    {
+
     }
     void Polyline::draw(PNGImage &img) const
     {
@@ -221,6 +241,10 @@ namespace svg
         : Polyline(stroke, {start, end}), start(start), end(end)
     {
     }
+    Line::~Line() 
+    {
+
+    }
     void Line::draw(PNGImage &img) const
     {
         img.draw_line(start, end, stroke);
@@ -262,6 +286,13 @@ namespace svg
     Group::Group(const std::vector<SVGElement *> &elements)
         : elements(elements)
     {
+    }
+    Group::~Group() 
+    {
+        for (auto &element : elements)
+        {
+            delete element;
+        }
     }
     void Group::draw(PNGImage &img) const
     {

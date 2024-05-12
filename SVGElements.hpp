@@ -34,6 +34,7 @@ namespace svg
     {
     public:
         Ellipse(const Color &fill, const Point &center, const Point &radius);
+        ~Ellipse();
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
@@ -48,6 +49,7 @@ namespace svg
     {
     public:
         Circle(const Color &fill, const Point &center, const int &radius);
+        ~Circle();
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
@@ -60,6 +62,7 @@ namespace svg
     {
     public:
         Polygon(const Color &fill, const std::vector<Point> &points);
+        ~Polygon();
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
@@ -73,6 +76,7 @@ namespace svg
     {
     public:
         Rect(const Color &fill, const Point &top_left, const Point &bottom_right);
+        ~Rect();
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
@@ -86,6 +90,7 @@ namespace svg
     {
     public:
         Polyline(const Color &stroke, const std::vector<Point> &points);
+        ~Polyline();
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
@@ -99,6 +104,7 @@ namespace svg
     {
     public:
         Line(const Color &stroke, const Point &start, const Point &end);
+        ~Line();
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;
@@ -112,6 +118,7 @@ namespace svg
     {
     public:
         Group(const std::vector<SVGElement *> &elements);
+        ~Group();
         void draw(PNGImage &img) const override;
         void translate(Point &t) override;
         void rotate(const Point &origin, int degrees) override;

@@ -14,7 +14,6 @@ namespace svg
         {
             string transform_str = transform_attr;
             replace(transform_str.begin(), transform_str.end(), ',', ' ');
-            cout << transform_str << endl;
             int angle;
             int x_translate, y_translate;
             if (sscanf(transform_str.c_str(), "translate(%d %d)", &x_translate, &y_translate) == 2) 
