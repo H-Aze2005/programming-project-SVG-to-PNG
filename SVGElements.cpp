@@ -2,21 +2,16 @@
 
 namespace svg
 {
-    // These must be defined!
     SVGElement::SVGElement() {}
     SVGElement::~SVGElement() {}
 
-    // Ellipse (initial code provided)
     Ellipse::Ellipse(const Color &fill,
                      const Point &center,
                      const Point &radius)
         : fill(fill), center(center), radius(radius)
     {
     }
-    Ellipse::~Ellipse() 
-    {
-
-    }
+    Ellipse::~Ellipse() {}
     void Ellipse::draw(PNGImage &img) const
     {
         img.draw_ellipse(center, radius, fill);
@@ -35,15 +30,12 @@ namespace svg
         Point dist;
         dist.x = center.x - origin.x;
         dist.y = center.y - origin.y;
-
         // Scale the distance
         dist.x = dist.x * v;
         dist.y = dist.y * v;
-
         // Move the center to the new location
         center.x = origin.x + dist.x;
         center.y = origin.y + dist.y;
-
         // Scale the radius
         radius.x = radius.x * v;
         radius.y = radius.y * v;
@@ -52,20 +44,14 @@ namespace svg
     {
         return new Ellipse(*this);
     }
-    // @todo provide the implementation of SVGElement derived classes
-    // HERE -->
 
-    // Circle (initial code provided)
     Circle::Circle(const Color &fill,
                    const Point &center,
                    const int &radius)
         : Ellipse(fill, center, Point{radius, radius}), radius(radius)
     {
     }
-    Circle::~Circle() 
-    {
-
-    }
+    Circle::~Circle() {}
     void Circle::draw(PNGImage &img) const
     {
         img.draw_ellipse(center, Point{radius, radius}, fill);
@@ -80,18 +66,16 @@ namespace svg
     }
     void svg::Circle::scale(const Point &origin, int v)
     {
+        // Calculate the distance from the center to the scaling origin
         Point dist;
         dist.x = center.x - origin.x;
         dist.y = center.y - origin.y;
-
         // Scale the distance
         dist.x = dist.x * v;
         dist.y = dist.y * v;
-
         // Move the center to the new location
         center.x = origin.x + dist.x;
         center.y = origin.y + dist.y;
-
         // Scale the radius
         radius = radius * v;
     }
@@ -100,16 +84,12 @@ namespace svg
         return new Circle(*this);
     }
 
-    // Polygon (initial code provided)
     Polygon::Polygon(const Color &fill,
                      const std::vector<Point> &points)
         : fill(fill), points(points)
     {
     }
-    Polygon::~Polygon() 
-    {
-
-    }
+    Polygon::~Polygon() {}
     void Polygon::draw(PNGImage &img) const
     {
         img.draw_polygon(points, fill);
@@ -132,14 +112,13 @@ namespace svg
     {
         for (Point &point : points)
         {
+            // Calculate the distance from the point to the scaling origin
             Point dist;
             dist.x = point.x - origin.x;
             dist.y = point.y - origin.y;
-
             // Scale the distance
             dist.x *= v;
             dist.y *= v;
-
             // Move the point to the new location
             point.x = origin.x + dist.x;
             point.y = origin.y + dist.y;
@@ -150,17 +129,13 @@ namespace svg
         return new Polygon(*this);
     }
 
-    // Rect (initial code provided)
     Rect::Rect(const Color &fill,
                const Point &top_left,
                const Point &bottom_right)
         : Polygon(fill, {top_left, Point{bottom_right.x, top_left.y}, bottom_right, Point{top_left.x, bottom_right.y}})
     {
     }
-    Rect::~Rect() 
-    {
-
-    }
+    Rect::~Rect() {}
     void Rect::draw(PNGImage &img) const
     {
         img.draw_polygon(points, fill);
@@ -183,14 +158,13 @@ namespace svg
     {
         for (Point &point : points)
         {
+            // Calculate the distance from the point to the scaling origin
             Point dist;
             dist.x = point.x - origin.x;
             dist.y = point.y - origin.y;
-
             // Scale the distance
             dist.x *= v;
             dist.y *= v;
-
             // Move the point to the new location
             point.x = origin.x + dist.x;
             point.y = origin.y + dist.y;
@@ -201,16 +175,12 @@ namespace svg
         return new Rect(*this);
     }
 
-    // Polyline (initial code provided)
     Polyline::Polyline(const Color &stroke,
                        const std::vector<Point> &points)
         : stroke(stroke), points(points)
     {
     }
-    Polyline::~Polyline() 
-    {
-
-    }
+    Polyline::~Polyline() {}
     void Polyline::draw(PNGImage &img) const
     {
         for (size_t i = 0; i < points.size() - 1; ++i)
@@ -236,14 +206,13 @@ namespace svg
     {
         for (Point &point : points)
         {
+            // Calculate the distance from the point to the scaling origin
             Point dist;
             dist.x = point.x - origin.x;
             dist.y = point.y - origin.y;
-
             // Scale the distance
             dist.x *= v;
             dist.y *= v;
-
             // Move the point to the new location
             point.x = origin.x + dist.x;
             point.y = origin.y + dist.y;
@@ -254,17 +223,13 @@ namespace svg
         return new Polyline(*this);
     }
 
-    // Line (initial code provided)
     Line::Line(const Color &stroke,
                const Point &start,
                const Point &end)
         : Polyline(stroke, {start, end}), start(start), end(end)
     {
     }
-    Line::~Line() 
-    {
-
-    }
+    Line::~Line() {}
     void Line::draw(PNGImage &img) const
     {
         img.draw_line(start, end, stroke);
@@ -281,18 +246,16 @@ namespace svg
     }
     void svg::Line::scale(const Point &origin, int v)
     {
+        // Calculate the distance from the start point to the scaling origin
         Point dist;
         dist.x = start.x - origin.x;
         dist.y = start.y - origin.y;
-
         // Scale the distance
         dist.x *= v;
         dist.y *= v;
-
         // Move the start point to the new location
         start.x = origin.x + dist.x;
         start.y = origin.y + dist.y;
-
         // Do the same for the end point
         dist.x = end.x - origin.x;
         dist.y = end.y - origin.y;
@@ -306,7 +269,6 @@ namespace svg
         return new Line(*this);
     }
 
-    // Group (initial code provided)
     Group::Group(const std::vector<SVGElement *> &elements)
         : elements(elements)
     {

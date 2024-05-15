@@ -9,6 +9,10 @@ using namespace tinyxml2;
 
 namespace svg
 {
+    //! Helper function to apply transformations to SVG elements
+    //! @param element The SVG element to apply the transformation to.
+    //! @param transform_attr The transform attribute string.
+    //! @param transform_origin_attr The transform-origin attribute string.
     void applyTransform(SVGElement* element, const char* transform_attr, const char* transform_origin_attr) 
     {
         if (transform_attr) 
@@ -65,27 +69,31 @@ namespace svg
             }
         }
     }
-
+    //! Helper function to handle the recurisve needs of the group element
+    //! @param group_elem The XML element representing the group.
+    //! @param group_elements The vector of SVG elements to add the group elements to.
+    //! @param id_map The map of SVG elements with id attributes.
     void readGroup(XMLElement* group_elem, vector<SVGElement *>& group_elements, std::map<std::string, SVGElement*>& id_map)
     {
-    for (XMLElement* child = group_elem->FirstChildElement(); child != NULL; child = child->NextSiblingElement()) {
-        // Process child elements here, similar to in readSVG
-        // If you encounter another "g", call readGroup recursively
-        const char* element_name = child->Name();
-        if (strcmp(element_name, "g") == 0)
+        for (XMLElement* child = group_elem->FirstChildElement(); child != NULL; child = child->NextSiblingElement()) 
         {
-            vector<SVGElement *> nested_group_elements;
-            readGroup(child, nested_group_elements, id_map);
-            Group* nested_group = new Group(nested_group_elements);
-            applyTransform(nested_group, child->Attribute("transform"), child->Attribute("transform-origin"));
-            group_elements.push_back(nested_group);
-            if (child->Attribute("id"))
+            // Process child elements here, similar to in readSVG
+            // If you encounter another "g", call readGroup recursively
+            const char* element_name = child->Name();
+            if (strcmp(element_name, "g") == 0)
             {
-                id_map[child->Attribute("id")] = nested_group;
+                vector<SVGElement *> nested_group_elements;
+                readGroup(child, nested_group_elements, id_map);
+                Group* nested_group = new Group(nested_group_elements);
+                applyTransform(nested_group, child->Attribute("transform"), child->Attribute("transform-origin"));
+                group_elements.push_back(nested_group);
+                if (child->Attribute("id"))
+                {
+                    id_map[child->Attribute("id")] = nested_group;
+                }
             }
-        }
-        // Process other elements as before
-            if (strcmp(element_name, "ellipse") == 0)
+            // Process other elements as before
+            else if (strcmp(element_name, "ellipse") == 0)
             {
                 // Create Color object from fill color string
                 Color fill(parse_color(child->Attribute("fill")));
@@ -249,8 +257,8 @@ namespace svg
                     std::cerr << "Error: original element with id " << id << " not found." << std::endl;
                 }
             }
+        }
     }
-}
 
     void readSVG(const string& svg_file, Point& dimensions, vector<SVGElement *>& svg_elements)
     {
@@ -265,9 +273,8 @@ namespace svg
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
 
+        // Map to store elements with id attribute
         std::map<std::string, SVGElement*> id_map;
-        
-        // TODO complete code -->
         
         // Code to traverse the XML child nodes and parse the SVG elements that are defined
         for (XMLElement* child = xml_elem->FirstChildElement(); child != NULL; child = child->NextSiblingElement()) {
