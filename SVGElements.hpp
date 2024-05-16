@@ -207,11 +207,6 @@ namespace svg
         //! Create a deep copy of the rectangle.
         //! @return Pointer to the cloned rectangle.
         Rect* clone() const override;
-    private:
-        //! Top left corner coordinates
-        Point top_left;
-        //! Bottom right corner coordinates
-        Point bottom_right;
     };
     //! @class Polyline
     //! @brief Class that represents an SVG polyline
